@@ -10,7 +10,7 @@ export default function ProblemTable() {
 
   useEffect(() => {
     // 👉 Nếu bạn dùng API thật thì thay URL dưới đây
-    axios.get("/api/problems")
+    axios.get("https://problem.codejud.id.vn/api/problems")
       .then(res => setProblems(res.data))
       .catch(err => console.error("❌ Lỗi load API:", err));
   }, []);

@@ -5,7 +5,7 @@ export default function ProblemDescription({ problemId }) {
   const [problem, setProblem] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://14.225.205.6:8080/api/problems/${problemId}`)
+    axios.get(`https://problem.codejud.id.vn/api/problems/${problemId}`)
       .then(res => setProblem(res.data))
       .catch(err => console.error("Lỗi khi tải problem:", err));
   }, [problemId]);

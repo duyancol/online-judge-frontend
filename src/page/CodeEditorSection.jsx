@@ -21,7 +21,7 @@ export default function CodeEditorSection() {
 const [submissionResult, setSubmissionResult] = useState(null);
 
 useEffect(() => {
-  fetch("http://14.225.205.6:8080/api/problems")
+  fetch("https://problem.codejud.id.vn/api/problems")
     .then((res) => res.json())
     .then((data) => {
       setProblems(data);
