@@ -101,7 +101,7 @@ useEffect(() => {
 
     try {
       setIsLoadingRun(true);
-      const res = await fetch("http://14.225.205.6:8081/api/run", {
+      const res = await fetch("http://submit.codejud.id.vn/api/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -130,7 +130,7 @@ useEffect(() => {
 
     try {
       setIsLoading(true);
-      const res = await fetch("http://14.225.205.6:8081/api/submissions", {
+      const res = await fetch("http://submit.codejud.id.vn/api/submissions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
