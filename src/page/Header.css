@@ -1,0 +1,68 @@
+.navbar {
+    width: 100vw; /* full chiều ngang */
+    max-width: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background-color: white;
+    border-bottom: 1px solid #e5e7eb;
+    font-family: sans-serif;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10;
+  }
+  
+  
+  .navbar-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  
+  .logo {
+    height: 28px;
+    cursor: pointer;
+  }
+  
+  .nav-links a {
+    margin-right: 16px;
+    text-decoration: none;
+    color: #6b7280;
+    font-size: 14px;
+  }
+  
+  .nav-links a:first-child {
+    color: black;
+    font-weight: bold;
+    border-bottom: 2px solid black;
+  }
+  
+  .navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .auth-link {
+    font-size: 14px;
+    text-decoration: none;
+    color: #6b7280;
+  }
+  
+  .separator {
+    font-size: 14px;
+    color: #9ca3af;
+  }
+  
+  .premium-btn {
+    padding: 6px 12px;
+    background-color: #fff7ed;
+    color: #fb923c;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  

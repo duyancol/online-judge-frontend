@@ -1,0 +1,52 @@
+.study-plan-container {
+    padding: 24px;
+  }
+  
+  .study-plan-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  
+  .study-plan-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  @media (min-width: 768px) {
+    .study-plan-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  .study-plan-card {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-radius: 16px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.2s ease;
+  }
+  
+  .study-plan-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  .study-plan-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    margin-right: 16px;
+  }
+  
+  .study-plan-text h3 {
+    font-weight: 600;
+  }
+  
+  .study-plan-text p {
+    font-size: 14px;
+    color: #6b7280;
+  }
+  
