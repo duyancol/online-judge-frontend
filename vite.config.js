@@ -14,5 +14,13 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'), // alias @ -> src
     },
   },
-  
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://14.225.205.6:8080', // địa chỉ backend
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/api/, ''),
+      },
+    },
+  },
 });

@@ -10,7 +10,7 @@ export default function ProblemTable() {
 
   useEffect(() => {
     // 👉 Nếu bạn dùng API thật thì thay URL dưới đây
-    axios.get("http://14.225.205.6:8080/api/problems")
+    axios.get("/api/problems")
       .then(res => setProblems(res.data))
       .catch(err => console.error("❌ Lỗi load API:", err));
   }, []);
