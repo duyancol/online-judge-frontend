@@ -5,10 +5,11 @@ import { Select, SelectItem } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { PlayIcon, BugIcon, UploadCloudIcon } from "lucide-react";
 import { useParams } from "react-router-dom";
+import Editor from "@monaco-editor/react";
+const languages = ["java", "c", "cpp", "python"];
 
-const languages = ["java", "c", "cpp"];
 
-export default function CodeEditorSection() {
+export default function CodeEditorSection({ onSubmitResult, onSubmitData }) {
   const [problems, setProblems] = useState([]);
   const [selectedProblemId, setSelectedProblemId] = useState(null);
   const [selectedProblem, setSelectedProblem] = useState(null);
@@ -45,24 +46,165 @@ useEffect(() => {
 
   useEffect(() => {
     if (selectedProblem) {
-      setCode("// Write your code here");
+      if(selectedLanguage === "python"){
+        setCode("   # Write your code here");
+      }else{
+        setCode("// Write your code here");
+      }
+      
     }
   }, [selectedProblem, selectedLanguage]);
 
   const renderHeader = () => {
     if (!selectedProblem) return null;
+  
     const { methodName, methodSignature, returnType } = selectedProblem;
-
+  
     if (selectedLanguage === "java") {
+      const usesListNode = returnType.includes("ListNode") || methodSignature.includes("ListNode");
+    
       return (
         <pre className="bg-gray-100 rounded-t-md p-2 font-mono text-sm">
-          <code>public class Solution {"{"}</code>
-          <br />
-          <code>    public {methodSignature} {methodName}({returnType}) {"{"}</code>
+          <code>
+            {usesListNode && `// Definition for singly-linked list.\n`}
+            {usesListNode && `// public class ListNode {\n`}
+            {usesListNode && `//     int val;\n`}
+            {usesListNode && `//     ListNode next;\n`}
+            {usesListNode && `//     ListNode() {}\n`}
+            {usesListNode && `//     ListNode(int val) { this.val = val; }\n`}
+            {usesListNode && `//     ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n`}
+            {usesListNode && `// }\n\n`}
+            {`public class Solution {\n`}
+            {`    public ${methodSignature} ${methodName}(${returnType}) {\n`}
+          </code>
         </pre>
       );
     }
-
+    
+  
+    if (selectedLanguage === "python") {
+      const usesListNode = returnType.includes("ListNode") || methodName.includes("ListNode");
+      const params = returnType
+        .split(",")
+        .map(p => p.trim().split(" ").pop()) // chỉ lấy tên biến
+        .join(", ");
+    
+      return (
+        <pre className="bg-gray-100 rounded-t-md p-2 font-mono text-sm">
+          <code>
+            {usesListNode && `# Definition for singly-linked list.\n`}
+            {usesListNode && `# class ListNode(object):\n`}
+            {usesListNode && `#     def __init__(self, val=0, next=None):\n`}
+            {usesListNode && `#         self.val = val\n`}
+            {usesListNode && `#         self.next = next\n\n`}
+            {`def ${methodName}(${params}):`}
+          </code>
+        </pre>
+      );
+    }
+    if (selectedLanguage === "c") {
+      const is2DArrayReturn =
+        methodSignature.includes("List<List<Integer>>") ||
+        methodSignature.includes("int[][]");
+    
+      const usesListNode = methodSignature.includes("ListNode");
+    
+      const params = returnType
+        .split(",")
+        .map(p => {
+          p = p.trim();
+          const parts = p.split(/\s+/);
+          if (parts.length < 2) return p;
+    
+          const [type, name] = parts;
+    
+          if (type.includes("[]")) {
+            return `int* ${name}, int ${name}Size`;
+          } else if (type === "ListNode") {
+            return `struct ListNode* ${name}`;
+          } else if (type === "String") {
+            return `char* ${name}`;
+          } else {
+            return `${type} ${name}`;
+          }
+        });
+    
+      if (is2DArrayReturn) {
+        params.push("int* returnSize");
+        params.push("int** returnColumnSizes");
+      } else if (methodSignature.includes("[]")) {
+        params.push("int* returnSize");
+      }
+    
+      return (
+        <pre className="bg-gray-100 rounded-t-md p-2 font-mono text-sm">
+          <code>
+            {usesListNode && `// Definition for singly-linked list.\n`}
+            {usesListNode && `// struct ListNode {\n`}
+            {usesListNode && `//     int val;\n`}
+            {usesListNode && `//     struct ListNode *next;\n`}
+            {usesListNode && `// };\n\n`}
+            {methodSignature
+              .replace("List<List<Integer>>", "int**")
+              .replace("List<Integer>", "int*")
+              .replace("ListNode", "struct ListNode*")
+              .replace("[]", "*")} {methodName}({params.join(", ")});</code>
+        </pre>
+      );
+    }
+    
+    if (selectedLanguage === "cpp") {
+      const is2DArrayReturn =
+        methodSignature.includes("List<List<Integer>>") ||
+        methodSignature.includes("int[][]");
+    
+      const usesListNode = methodSignature.includes("ListNode");
+    
+      const cppReturnType = is2DArrayReturn
+        ? "vector<vector<int>>"
+        : methodSignature.includes("List<Integer>") || methodSignature.includes("int[]")
+        ? "vector<int>"
+        : methodSignature.includes("ListNode")
+        ? "ListNode*"
+        : methodSignature;
+    
+      const params = returnType
+        .split(",")
+        .map(p => {
+          p = p.trim();
+          const parts = p.split(/\s+/);
+          if (parts.length < 2) return p;
+    
+          const [type, name] = parts;
+    
+          if (type.includes("[]") || type.includes("List<Integer>")) {
+            return `vector<int>& ${name}`;
+          } else if (type === "ListNode") {
+            return `ListNode* ${name}`;
+          } else {
+            return `${type} ${name}`;
+          }
+        });
+    
+      return (
+        <pre className="bg-gray-100 rounded-t-md p-2 font-mono text-sm">
+          <code>
+            {usesListNode && `// Definition for singly-linked list.\n`}
+            {usesListNode && `// struct ListNode {\n`}
+            {usesListNode && `//     int val;\n`}
+            {usesListNode && `//     ListNode *next;\n`}
+            {usesListNode && `//     ListNode() : val(0), next(nullptr) {}\n`}
+            {usesListNode && `//     ListNode(int x) : val(x), next(nullptr) {}\n`}
+            {usesListNode && `//     ListNode(int x, ListNode *next) : val(x), next(next) {}\n`}
+            {usesListNode && `// };\n\n`}
+            {`${cppReturnType} ${methodName}(${params.join(", ")});`}
+          </code>
+        </pre>
+      );
+    }
+    
+  
+    // fallback
     return (
       <pre className="bg-gray-100 rounded-t-md p-2 font-mono text-sm">
         <code>{methodSignature} {methodName}({returnType}) {"{"}</code>
@@ -101,7 +243,7 @@ useEffect(() => {
 
     try {
       setIsLoadingRun(true);
-      const res = await fetch("http://submit.codejud.id.vn/api/run", {
+      const res = await fetch("https://submit.codejud.id.vn/api/run", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -130,7 +272,7 @@ useEffect(() => {
 
     try {
       setIsLoading(true);
-      const res = await fetch("http://submit.codejud.id.vn/api/submissions", {
+      const res = await fetch("https://submit.codejud.id.vn/api/submissions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -142,12 +284,21 @@ useEffect(() => {
       console.log("✅ Submission response:", data);
      
       setSubmissionResult(data);
+      if (onSubmitData) {
+        onSubmitData(data);
+        console.log("✅ Submission response:", data);
+
+      }
+      if (onSubmitResult && data.status) {
+        onSubmitResult(data.status === "PASS" ? "Accepted" : "Wrong Answer");
+      }
     } catch (err) {
       console.error("❌ Submit failed:", err);
       
     } finally {
       setIsLoading(false); // 👉 tắt loading dù thành công hay thất bại
     }
+    
   };
 
   return (
@@ -199,18 +350,16 @@ useEffect(() => {
 <div className="flex font-mono text-sm h-64 border border-gray-300 rounded-md overflow-hidden">
 {/* Số dòng */}
 {/* Số dòng bên trái */}
-<div className="bg-gray-100 text-gray-500 px-2 py-2 text-right select-none min-w-[2rem]">
-    {Array.from({ length: Math.max(code.split("\n").length, 1) }).map((_, i) => (
-      <div key={i} className="leading-6">{i + 6}</div>
-    ))}
-  </div>
+
 
 
 {/* Textarea */}
-<Textarea
-  className="flex-1 h-full border-none resize-none rounded-none focus:outline-none"
+<Editor
+  height="400px"
+  language={selectedLanguage === "cpp" ? "cpp" : selectedLanguage}
   value={code}
-  onChange={(e) => setCode(e.target.value)}
+  onChange={(value) => setCode(value || "")}
+  theme="vs-dark"
 />
 </div>
           {renderFooter()}
@@ -382,38 +531,39 @@ useEffect(() => {
               )}
         
               {/* ✅ TH2: Hiển thị danh sách test case nếu không có lỗi hệ thống */}
-              {!submissionResult.errorMessage && submissionResult.output && (
-                <>
-                  <h3 className="mt-4 font-semibold">Test case:</h3>
-                  {submissionResult.output
-                    .slice(1, -1) // Bỏ dấu [ ]
-                    .split("TestResult")
-                    .filter(Boolean)
-                    .map((item, idx) => {
-                      const clean = item.replace(/^\[/, "").replace(/\]$/, "");
-                      const inputMatch = clean.match(/input=\[(.*?\]),(.*?), expectedOutput=/);
-                      const expectedMatch = clean.match(/expectedOutput=\[(.*?)\], actualOutput=/);
-                      const actualMatch = clean.match(/actualOutput=\[(.*?)\], passed=/);
-                      const passedMatch = clean.match(/passed=(true|false)/);
-        
-                      const passed = passedMatch?.[1] === "true";
-                      return (
-                        <div
-                          key={idx}
-                          className={`p-3 rounded-md border ${passed ? "bg-green-50 border-green-300" : "bg-red-50 border-red-300"}`}
-                        >
-                          <p><strong>Input:</strong> [{inputMatch?.[1] ?? "?"}],{inputMatch?.[2] ?? "?"}</p>
-                          <p><strong>Expected Output:</strong> [{expectedMatch?.[1] ?? "?"}]</p>
-                          <p><strong>Your Output:</strong> [{actualMatch?.[1] ?? "?"}]</p>
-                          <p>
-                            <strong>Status:</strong>{" "}
-                            {passed ? <span className="text-green-600">✅ Passed</span> : <span className="text-red-600">❌ Failed</span>}
-                          </p>
-                        </div>
-                      );
-                    })}
-                </>
-              )}
+              {submissionResult.output
+                .slice(1, -1) // Bỏ dấu [ ]
+                .split("TestResult")
+                .filter(Boolean)
+                .map((item, idx) => {
+                  const clean = item.replace(/^\[/, "").replace(/\]$/, "");
+              
+                  const inputMatch = clean.match(/input=\[(.*?)\],(.*?), expectedOutput=/) ||
+                                     clean.match(/input=(.*?), expectedOutput=/);
+                  const expectedMatch = clean.match(/expectedOutput=\[(.*?)\], actualOutput=/) ||
+                                        clean.match(/expectedOutput=(.*?), actualOutput=/);
+                  const actualMatch = clean.match(/actualOutput=\[(.*?)\], passed=/) ||
+                                      clean.match(/actualOutput=(.*?), passed=/);
+                  const passedMatch = clean.match(/passed=(true|false)/);
+              
+                  const passed = passedMatch?.[1] === "true";
+              
+                  return (
+                    <div
+                      key={idx}
+                      className={`p-3 rounded-md border ${passed ? "bg-green-50 border-green-300" : "bg-red-50 border-red-300"}`}
+                    >
+                      <p><strong>Input:</strong> {inputMatch ? (inputMatch[1] && inputMatch[2] ? `[${inputMatch[1]}], ${inputMatch[2]}` : inputMatch[1]) : "?"}</p>
+                      <p><strong>Expected Output:</strong> [{expectedMatch?.[1] ?? "?"}]</p>
+                      <p><strong>Your Output:</strong> [{actualMatch?.[1] ?? "?"}]</p>
+                      <p>
+                        <strong>Status:</strong>{" "}
+                        {passed ? <span className="text-green-600">✅ Passed</span> : <span className="text-red-600">❌ Failed</span>}
+                      </p>
+                    </div>
+                  );
+                })}
+              
             </CardContent>
           </Card>
         )}

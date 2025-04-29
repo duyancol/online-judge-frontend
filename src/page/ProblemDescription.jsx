@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function ProblemDescription({ problemId }) {
+export default function ProblemDescription({ problemId, submissionStatus }) {
   const [problem, setProblem] = useState(null);
 
   useEffect(() => {
@@ -14,6 +14,9 @@ export default function ProblemDescription({ problemId }) {
 
   return (
     <div>
+    {submissionStatus === "Accepted" && (
+      <div className="submission-status success">✔ Accepted</div>
+    )}
       <h1 className="text-2xl font-bold mb-4">{problem.id}. {problem.title}</h1>
       <p className="mb-4">{problem.description}</p>
 

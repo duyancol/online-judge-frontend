@@ -1,36 +1,70 @@
 import React from "react";
 import StudyPlanSection from "./StudyPlanSection";
 import ProblemTable from "./ProblemTable";
+import TagList from "./TagList ";
+
 const MainDashboard = () => {
+  const banners = [
+    {
+      title: "LeetCode's Interview Crash Course",
+      description: "System Design for Interviews",
+      buttonText: "Start Learning",
+      link: "https://leetcode.com",
+      bgGradient: "bg-gradient-to-r from-green-400 to-green-600",
+    },
+    {
+      title: "LeetCode's Interview Crash Course",
+      description: "Data Structures and Algorithms",
+      buttonText: "Start Learning",
+      link: "https://leetcode.com",
+      bgGradient: "bg-gradient-to-r from-purple-400 to-purple-600",
+    },
+    {
+      title: "New & Trending Company Qs",
+      description: "Latest Qs From Big Tech",
+      buttonText: "Claim Now",
+      link: "https://leetcode.com",
+      bgGradient: "bg-gradient-to-r from-orange-400 to-orange-600",
+    },
+  ];
+
   return (
     <div className="flex w-[80%] mx-auto px-8 py-6 gap-6">
-
       {/* Left Section - 70% */}
       <div className="w-[70%] space-y-6">
-        {/* Banner Section */}
-        <div className="flex gap-4">
-          <div className="bg-green-100 rounded-xl p-4 w-full">
-            <h2 className="font-bold text-lg mb-2">LeetCode's Interview Crash Course</h2>
-            <p className="text-sm">System Design for Interviews and Beyond</p>
-            <button className="mt-3 bg-white text-gray-800 border border-gray-300 px-3 py-1 rounded hover:shadow">Start Learning</button>
+      {/* Banner Section */}
+      <div className="flex gap-4 h-[140px]">
+        {banners.map((item, index) => (
+          <div
+            key={index}
+            className={`relative flex flex-col justify-between p-4 w-full rounded-2xl shadow-md text-white ${item.bgGradient} hover:scale-105 transition-transform duration-300`}
+          >
+            <div>
+              <h2 className="font-bold text-lg leading-tight">{item.title}</h2>
+              <p className="text-sm opacity-90">{item.description}</p>
+            </div>
+            <div>
+              <a
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-block bg-white text-gray-800 text-sm font-semibold rounded-md px-4 py-1 shadow hover:shadow-md transition"
+              >
+                {item.buttonText}
+              </a>
+            </div>
           </div>
-            <div className="bg-purple-100 rounded-xl p-4 w-full">
-            <h2 className="font-bold text-lg mb-2">LeetCode's Interview Crash Course</h2>
-            <p className="text-sm">Data Structures and Algorithms</p>
-            <button className="mt-3 bg-white text-gray-800 border border-gray-300 px-3 py-1 rounded hover:shadow">Start Learning</button>
-          </div>
-          
-          <div className="bg-blue-100 rounded-xl p-4 w-full">
-            <h2 className="font-bold text-lg mb-2">Top Interview Questions</h2>
-            <button className="mt-8 bg-white text-gray-800 border border-gray-300 px-3 py-1 rounded hover:shadow">Get Started</button>
-          </div>
-         
-        </div>
+        ))}
+      </div>
+      <TagList/>
+      <ProblemTable />
+      {/* Study Plan Section */}
+      {/* <ProblemTable /> */}
+    </div>
 
         {/* Study Plan Section */}
-        <ProblemTable/>
-       
-      </div>
+        
+     
 
       {/* Right Section - 30% */}
       <div className="w-[30%]">

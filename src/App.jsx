@@ -9,6 +9,7 @@ import MainDashboard from './page/MainDashboard'
 import ProblemDetail from './page/ProblemDetail';
 import GoogleLoginSection from './page/GoogleLoginSection';
 import Editorial from './page/Editorial';
+import TagPage from './page/TagPage';
 function App() {
   return (
     <Router>
@@ -18,6 +19,7 @@ function App() {
       <Route path="/problems/:id" element={<ProblemDetail />} />
       <Route path="/login" element={<GoogleLoginSection />} />
       <Route path="/test" element={<Editorial />} />
+      <Route path="/tag/:tagName" element={<TagPage />} />
     </Routes>
   </Router>
   );
