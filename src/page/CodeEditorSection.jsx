@@ -22,24 +22,25 @@ export default function CodeEditorSection({ onSubmitResult, onSubmitData }) {
 const [submissionResult, setSubmissionResult] = useState(null);
 
 useEffect(() => {
-  fetch("https://problem.codejud.id.vn/api/problems")
-    .then((res) => res.json())
+  const problemId = Number(id);
+  if (isNaN(problemId)) return;
+
+  fetch(`https://problem.codejud.id.vn/api/problems/${problemId}`)
+    .then((res) => {
+      if (!res.ok) throw new Error("Problem not found");
+      return res.json();
+    })
     .then((data) => {
-      setProblems(data);
-
-      // Convert id từ URL sang number để so sánh
-      const problemIdFromUrl = Number(id);
-      const matched = data.find((p) => p.id === problemIdFromUrl);
-
-      if (matched) {
-        setSelectedProblemId(matched.id);
-        setSelectedProblem(matched);
-      } else if (data.length > 0) {
-        setSelectedProblemId(data[0].id);
-        setSelectedProblem(data[0]);
-      }
+      setSelectedProblemId(data.id);
+      setSelectedProblem(data);
+      setProblems([])
+    })
+    .catch((error) => {
+      console.error("Failed to fetch problem:", error);
+      // Optional: fallback hoặc hiển thị thông báo lỗi
     });
 }, [id]);
+
 
 
 
@@ -260,7 +261,7 @@ useEffect(() => {
 
   const handleSubmit = async () => {
     if (!selectedProblem) return alert("No problem selected");
-
+setRunResult(null)
     const payload = {
       problemId: selectedProblem.id,
       userId: "duy01",

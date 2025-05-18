@@ -17,7 +17,7 @@ function GoogleLoginSection() {
       localStorage.setItem('token', credentialResponse.credential);
 
       const response = await axios.post(
-        `https://shop-shoe-production-5fc8.up.railway.app/api/v1/auth/google/${credentialResponse.credential}`
+        `https://shop-shoe-production.up.railway.app/api/v1/auth/google/${credentialResponse.credential}`
       );
 
       localStorage.setItem('nameuser', response.data.firstname);

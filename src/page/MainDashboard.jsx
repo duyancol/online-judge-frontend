@@ -103,7 +103,7 @@ const MainDashboard = () => {
           </div>
 
           <div className="text-xs text-gray-500 flex justify-between">
-            <span className="text-green-500 font-medium">🪙 0 Redeem</span>
+            <span className="text-green-500 font-medium"><img src="https://leetcode.com/_next/static/images/ttt-a2c700529300981c5d372d69bb9bbdaa.png"></img> 0 Redeem</span>
             <span className="underline cursor-pointer">Rules</span>
           </div>
         </div>
